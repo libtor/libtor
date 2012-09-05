@@ -1,0 +1,12 @@
+[submodule "vendor/openssl"]
+	path = vendor/openssl
+	url = git://github.com/libtor/openssl.git
+[submodule "vendor/libuv"]
+	path = vendor/libuv
+	url = git://github.com/libtor/libuv.git
+[submodule "vendor/zlib"]
+	path = vendor/zlib
+	url = git://github.com/libtor/zlib.git
+[submodule "vendor/tinytest"]
+	path = vendor/tinytest
+	url = git://github.com/libtor/tinytest.git

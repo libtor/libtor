@@ -1,0 +1,5 @@
+*.a
+*.so
+*.o
+*.S
+test/run
