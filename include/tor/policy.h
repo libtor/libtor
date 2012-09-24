@@ -39,4 +39,24 @@ typedef struct TorPolicy {
 	TorPolicyRule* rules;
 } TorPolicy;
 
+TorPolicy* tor_policy_new (void);
+
+TorPolicy* tor_policy_new_with (TorPolicyRule* rules);
+
+void tor_policy_destroy (TorPolicy* self);
+
+TorPolicyRule* tor_policy_rule_new (void);
+
+TorPolicyRule* tor_policy_rule_new_with (TorPolicyRuleType type, const char* address, uint16_t start, uint16_t end);
+
+void tor_policy_rule_destroy (TorPolicyRule* self);
+
+TorPolicy* tor_policy_add_rule (TorPolicy* self, TorPolicyRule* rule);
+
+TorPolicy* tor_policy_remove_rule (TotPolicy* self, TorPolicyRule* rule);
+
+TorPolicy* tor_policy_accept (TorPolicy* self, const char* address, uint16_t start, uint16_t end);
+
+TorPolicy* tor_policy_reject (TorPolicy* self, const char* address, uint16_t start, uint16_t end);
+
 #endif
