@@ -9,7 +9,7 @@ LDFLAGS = '-lm -ldl -lpthread -lrt'
 
 SOURCES      = FileList['sources/**/*.c']
 OBJECTS      = SOURCES.ext('o')
-DEPENDENCIES = FileList['vendor/libuv/uv.a', 'vendor/openssl/libcrypto.a', 'vendor/openssl/libssl.a', 'vendor/zlib/libz.a']
+DEPENDENCIES = FileList['vendor/libuv/libuv.a', 'vendor/openssl/libcrypto.a', 'vendor/openssl/libssl.a', 'vendor/zlib/libz.a']
 
 CLEAN.include(OBJECTS)
 CLOBBER.include('libtor.so', 'libtor-static.a', 'test/run', DEPENDENCIES)
@@ -74,7 +74,7 @@ namespace :build do
 		}
 	end
 
-	file 'vendor/libuv/uv.a' do
+	file 'vendor/libuv/libuv.a' do
 		Rake::Task['build:libuv'].invoke
 	end
 
