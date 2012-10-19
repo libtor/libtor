@@ -39,12 +39,12 @@ tor_public_key_new (void)
 TorPublicKey*
 tor_public_key_new_from (RSA* key)
 {
+	assert(key);
+
 	TorPublicKey* self = malloc(sizeof(TorPublicKey));
 
 	self->references = 0;
 	self->key        = key;
-
-	assert(self->key);
 
 	return self;
 }
@@ -75,11 +75,11 @@ tor_public_key_destroy (TorPublicKey* self)
 EVP_PKEY*
 tor_public_key_to_evp (TorPublicKey* self)
 {
-	RSA*      tmp    = NULL;
-	EVP_PKEY* result = NULL;
-
 	assert(self);
 	assert(self->key);
+
+	RSA*      tmp    = NULL;
+	EVP_PKEY* result = NULL;
 
 	if (!(tmp = RSAPublicKey_dup(self->key))) {
 		goto error;
