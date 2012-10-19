@@ -7,12 +7,10 @@
  *  0. You just DO WHAT THE FUCK YOU WANT TO.
  */
 
-#include <stdlib.h>
-
-#define ARGS_LENGTH(...)  ARGS_LENGTH_(__VA_ARGS__, ARGS_LENGTH_SEQ)
+#define ARGS_LENGTH(...)  ARGS_LENGTH_(0, ##__VA_ARGS__, ARGS_LENGTH_SEQ)
 #define ARGS_LENGTH_(...) ARGS_LENGTH_N(__VA_ARGS__)
 
-#define ARGS_LENGTH_N( \
+#define ARGS_LENGTH_N(_, \
 	 _1,  _2,  _3,  _4,  _5,  _6,  _7,  _8,  _9, _10, \
 	_11, _12, _13, _14, _15, _16, _17, _18, _19, _20, \
 	_21, _22, _23, _24, _25, _26, _27, _28, _29, _30, \
@@ -31,31 +29,31 @@
 	 9,  8,  7,  6,  5,  4,  3,  2,  1,  0
 
 #define ARGS_FIRST_AS(type, ...)  ((type) ARGS_FIRST(__VA_ARGS__))
-#define ARGS_FIRST(...) ARGS_FIRST_(__VA_ARGS__, ARGS_NULL_SEQ)
+#define ARGS_FIRST(...) ARGS_FIRST_(0, ##__VA_ARGS__, ARGS_ZERO_SEQ)
 #define ARGS_FIRST_(...) ARGS_FIRST__(__VA_ARGS__)
-#define ARGS_FIRST__(a, ...) (a)
+#define ARGS_FIRST__(_, a, ...) (a)
 
 #define ARGS_SECOND_AS(type, ...) ((type) ARGS_SECOND(__VA_ARGS__))
-#define ARGS_SECOND(...) ARGS_SECOND_(__VA_ARGS__, ARGS_NULL_SEQ)
+#define ARGS_SECOND(...) ARGS_SECOND_(0, ##__VA_ARGS__, ARGS_ZERO_SEQ)
 #define ARGS_SECOND_(...) ARGS_SECOND__(__VA_ARGS__)
-#define ARGS_SECOND__(a, b, ...) (b)
+#define ARGS_SECOND__(_, a, b, ...) (b)
 
 #define ARGS_THIRD_AS(type, ...)  ((type) ARGS_THIRD(__VA_ARGS__))
-#define ARGS_THIRD(...) ARGS_THIRD_(__VA_ARGS__, ARGS_NULL_SEQ)
+#define ARGS_THIRD(...) ARGS_THIRD_(0, ##__VA_ARGS__, ARGS_ZERO_SEQ)
 #define ARGS_THIRD_(...) ARGS_THIRD__(__VA_ARGS__)
-#define ARGS_THIRD__(a, b, c, ...) (c)
+#define ARGS_THIRD__(_, a, b, c, ...) (c)
 
 #define ARGS_FOURTH_AS(type, ...) ((type) ARGS_FOURTH(__VA_ARGS__))
-#define ARGS_FOURTH(...) ARGS_FOURTH_(__VA_ARGS__, ARGS_NULL_SEQ)
+#define ARGS_FOURTH(...) ARGS_FOURTH_(0, ##__VA_ARGS__, ARGS_ZERO_SEQ)
 #define ARGS_FOURTH_(...) ARGS_FOURTH__(__VA_ARGS__)
-#define ARGS_FOURTH__(a, b, c, d, ...) (d)
+#define ARGS_FOURTH__(_, a, b, c, d, ...) (d)
 
 #define ARGS_FIFTH_AS(type, ...)  ((type) ARGS_FIFTH(__VA_ARGS__))
-#define ARGS_FIFTH(...) ARGS_FIFTH_(__VA_ARGS__, ARGS_NULL_SEQ)
+#define ARGS_FIFTH(...) ARGS_FIFTH_(0, ##__VA_ARGS__, ARGS_ZERO_SEQ)
 #define ARGS_FIFTH_(...) ARGS_FIFTH__(__VA_ARGS__)
-#define ARGS_FIFTH__(a, b, c, d, e, ...) (e)
+#define ARGS_FIFTH__(_, a, b, c, d, e, ...) (e)
 
-#define ARGS_NULL_SEQ \
-	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
-	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
-	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+#define ARGS_ZERO_SEQ \
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0
