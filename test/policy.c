@@ -16,33 +16,37 @@
  * along with libtor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tinytest.h>
-#include <tinytest_macros.h>
+#include <tor/policy.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <time.h>
-
-#include <tor.h>
-
-#include "random.c"
-#include "aes.c"
-#include "policy.c"
-
-struct testgroup_t groups[] = {
-	{ "random/", random_tests },
-	{ "aes/", aes_tests },
-	{ "policy/", policy_tests },
-
-	END_OF_GROUPS
-};
-
-int
-main (int argc, const char* argv[])
+void
+test_policy_creation (void* data)
 {
-	tor_init();
+	TorPolicy* policy = tor_policy_new();
 
-	return tinytest_main(argc, argv, groups);
+	tt_assert(policy);
+
+end:;
 }
+
+void
+test_policy_can (void* data)
+{
+	TorPolicy* policy = tor_policy_new();
+
+	tor_policy_accept(policy, "*", 80); // accept *:80
+	tor_policy_reject(policy, "*", 43); // reject *:43
+	tor_policy_accept(policy, "*");     // accept *:*
+
+	tt_assert(tor_policy_can(policy, "127.0.0.1", 80)   == true);
+	tt_assert(tor_policy_can(policy, "127.0.0.1", 43)   == false);
+	tt_assert(tor_policy_can(policy, "127.0.0.1", 9001) == true);
+
+end:;
+}
+
+struct testcase_t policy_tests[] = {
+	{ "creation", test_policy_creation },
+	{ "can", test_policy_can },
+
+	END_OF_TESTCASES
+};
