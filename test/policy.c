@@ -16,8 +16,6 @@
  * along with libtor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tor/policy.h>
-
 void
 test_policy_creation (void* data)
 {
@@ -26,6 +24,19 @@ test_policy_creation (void* data)
 	tt_assert(policy);
 
 end:;
+}
+
+void
+test_policy_matches (void* data)
+{
+	TorPolicyRule* rule;
+
+	rule = tor_policy_rule_new_with(TOR_POLICY_RULE_ACCEPT, "*", 42, 0);
+	tt_assert(tor_policy_rule_matches(rule, "127.0.0.1", 42) == true);
+	tt_assert(tor_policy_rule_matches(rule, "127.0.0.1", 23) == false);
+
+end:
+	tor_policy_rule_destroy(rule);
 }
 
 void
@@ -41,11 +52,13 @@ test_policy_can (void* data)
 	tt_assert(tor_policy_can(policy, "127.0.0.1", 43)   == false);
 	tt_assert(tor_policy_can(policy, "127.0.0.1", 9001) == true);
 
-end:;
+end:
+	tor_policy_destroy(policy);
 }
 
 struct testcase_t policy_tests[] = {
 	{ "creation", test_policy_creation },
+	{ "matches", test_policy_can },
 	{ "can", test_policy_can },
 
 	END_OF_TESTCASES

@@ -22,14 +22,12 @@
 #undef NO_MAGIC
 #undef PRIVATE
 
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include <tor/common.h>
 
 TorPolicy*
 tor_policy_new (void)
 {
-	TorPolicy* self = malloc(sizeof(TorPolicy));
+	TorPolicy* self = tor_new(TorPolicy);
 
 	self->rules = NULL;
 	self->last  = NULL;
@@ -45,12 +43,14 @@ tor_policy_destroy (TorPolicy* self)
 	TorPolicyRule* current = self->rules;
 
 	while (current) {
+		TorPolicyRule* next = current->next;
+
 		tor_policy_rule_destroy(current);
 
-		current = current->next;
+		current = next;
 	}
 
-	free(self);
+	tor_destroy(self);
 }
 
 TorPolicy*
@@ -76,7 +76,7 @@ tor_policy_reject (TorPolicy* self, const char* address, uint16_t start, uint16_
 }
 
 bool
-tor_policy_can (TorPolicy* self, char* address, uint16_t port)
+tor_policy_can (TorPolicy* self, const char* address, uint16_t port)
 {
 	assert(self);
 	assert(address);
@@ -89,59 +89,14 @@ tor_policy_can (TorPolicy* self, char* address, uint16_t port)
 	TorPolicyRule* current = self->rules;
 
 	while (current) {
-		if (current->address) {
-			continue; // if it doesn't match
-		}
-
-		if (current->end == 0) {
-			if (current->start == 0) {
-				return TOR_POLICY_RULE_TO_BOOL(current);
-			}
-			else if (current->start == port) {
-				return TOR_POLICY_RULE_TO_BOOL(current);
-			}
-		}
-		else {
-			if (port >= current->start && port <= current->end) {
-				return TOR_POLICY_RULE_TO_BOOL(current);
-			}
+		if (tor_policy_rule_matches(current, address, port)) {
+			return TOR_POLICY_RULE_TO_BOOL(current);
 		}
 
 		current = current->next;
 	}
 
 	return true;
-}
-
-TorPolicyRule*
-tor_policy_rule_new (void)
-{
-	return malloc(sizeof(TorPolicyRule));
-}
-
-TorPolicyRule*
-tor_policy_rule_new_with (TorPolicyRuleType type, const char* address, uint16_t start, uint16_t end)
-{
-	assert(address);
-
-	TorPolicyRule* self = tor_policy_rule_new();
-
-	self->type    = type;
-	self->address = (!address || strcmp(address, "*") == 0) ? NULL : strdup(address);
-	self->start   = start;
-	self->end     = end;
-
-	return self;
-}
-
-void
-tor_policy_rule_destroy (TorPolicyRule* self)
-{
-	if (self->address) {
-		free(self->address);
-	}
-
-	free(self);
 }
 
 TorPolicyRule*
@@ -199,4 +154,59 @@ tor_policy_remove_rule (TorPolicy* self, TorPolicyRule* rule)
 	}
 
 	return NULL;
+}
+
+TorPolicyRule*
+tor_policy_rule_new (void)
+{
+	return tor_new(TorPolicyRule);
+}
+
+TorPolicyRule*
+tor_policy_rule_new_with (TorPolicyRuleType type, const char* address, uint16_t start, uint16_t end)
+{
+	assert(address);
+
+	TorPolicyRule* self = tor_policy_rule_new();
+
+	self->type    = type;
+	self->address = (!address || strcmp(address, "*") == 0) ? NULL : strdup(address);
+	self->start   = start;
+	self->end     = end;
+
+	return self;
+}
+
+void
+tor_policy_rule_destroy (TorPolicyRule* self)
+{
+	if (self->address) {
+		free(self->address);
+	}
+
+	tor_destroy(self);
+}
+
+bool
+tor_policy_rule_matches (TorPolicyRule* self, const char* address, uint16_t port)
+{
+	if (self->address) {
+		return false; // if it doesn't match
+	}
+
+	if (self->end == 0) {
+		if (self->start == 0) {
+			return true;
+		}
+		else if (self->start == port) {
+			return true;
+		}
+	}
+	else {
+		if (port >= self->start && port <= self->end) {
+			return true;
+		}
+	}
+
+	return false;
 }
