@@ -56,6 +56,9 @@ tor_new (size_t size)
 	return self;
 }
 
+#define tor_new(what) \
+	tor_new(sizeof(what))
+
 static inline void
 tor_destroy (void* self)
 {
@@ -63,8 +66,5 @@ tor_destroy (void* self)
 
 	free(self);
 }
-
-#define tor_new(what) \
-	tor_new(sizeof(what))
 
 #endif
