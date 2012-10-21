@@ -25,7 +25,9 @@
 #include <errno.h>
 #include <time.h>
 
+#define PRIVATE
 #include <tor.h>
+#undef PRIVATE
 
 #include "random.c"
 #include "aes.c"
