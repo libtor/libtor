@@ -20,13 +20,12 @@
 #include <tor/private_key.h>
 #undef PRIVATE
 
-#include <stdbool.h>
-#include <assert.h>
+#include <tor/common.h>
 
 TorPrivateKey*
 tor_private_key_new (void)
 {
-	TorPrivateKey* self = malloc(sizeof(TorPrivateKey));
+	TorPrivateKey* self = tor_new(TorPrivateKey);
 
 	self->references = 0;
 	self->key        = RSA_new();
@@ -39,7 +38,7 @@ tor_private_key_new (void)
 TorPrivateKey*
 tor_private_key_new_from (RSA* key)
 {
-	TorPrivateKey* self = malloc(sizeof(TorPrivateKey));
+	TorPrivateKey* self = tor_new(TorPrivateKey);
 
 	self->references = 0;
 	self->key        = key;
@@ -71,7 +70,7 @@ tor_private_key_destroy (TorPrivateKey* self)
 	assert(self->references <= 0);
 
 	RSA_free(self->key);
-	free(self);
+	tor_destroy(self);
 }
 
 EVP_PKEY*

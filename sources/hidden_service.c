@@ -25,7 +25,7 @@
 TorHiddenService*
 tor_hidden_service_new (void)
 {
-	TorHiddenService* self = malloc(sizeof(TorHiddenService));
+	TorHiddenService* self = tor_new(TorHiddenService);
 
 	return self;
 }
@@ -33,5 +33,5 @@ tor_hidden_service_new (void)
 void
 tor_hidden_service_destroy (TorHiddenService* self)
 {
-	free(self);
+	tor_destroy(self);
 }

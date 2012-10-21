@@ -22,9 +22,7 @@
 #undef NO_MAGIC
 #undef PRIVATE
 
-#include <stdint.h>
-#include <assert.h>
-#include <limits.h>
+#include <tor/common.h>
 
 #include <openssl/aes.h>
 #include <openssl/modes.h>
@@ -35,7 +33,7 @@ tor_aes_new (const void* key, const void* iv)
 	assert(key);
 	assert(iv);
 
-	TorAES* self = malloc(sizeof(TorAES));
+	TorAES* self = tor_new(TorAES);
 
 	EVP_EncryptInit(&self->context, EVP_aes_128_ctr(), key, iv);
 
@@ -48,7 +46,8 @@ tor_aes_destroy (TorAES* self)
 	assert(self);
 
 	EVP_CIPHER_CTX_cleanup(&self->context);
-	free(self);
+
+	tor_destroy(self);
 }
 
 bool

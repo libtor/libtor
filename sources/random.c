@@ -22,8 +22,7 @@
 #undef NO_MAGIC
 #undef PRIVATE
 
-#include <limits.h>
-#include <assert.h>
+#include <tor/common.h>
 
 #include <openssl/rand.h>
 

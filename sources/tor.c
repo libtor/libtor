@@ -16,7 +16,7 @@
  * along with libtor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdbool.h>
+#include <tor/common.h>
 
 #include <uv.h>
 
