@@ -20,7 +20,7 @@
 #include <tor/hidden_service.h>
 #undef PRIVATE
 
-#include <stdlib.h>
+#include <tor/common.h>
 
 TorHiddenService*
 tor_hidden_service_new (void)
